@@ -1,0 +1,29 @@
+{
+  "name": "w02-prompt-lab",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/w02-prompt-lab,type=bind",
+  "workspaceFolder": "/workspaces/w02-prompt-lab",
+  "postCreateCommand": "uv sync --frozen",
+  "remoteUser": "vscode",
+  "containerEnv": {
+    "OLLAMA_BASE_URL": "http://host.docker.internal:11434"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["tests"]
+      }
+    }
+  }
+}
+
