@@ -40,8 +40,6 @@ class Settings:
     temperature: float
     max_retries: int
     max_schema_repairs: int
-    per_run_cap_usd: Decimal
-    weekly_cap_usd: Decimal
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -59,7 +57,5 @@ class Settings:
             temperature=float(os.getenv("TEMPERATURE", "0.0")),
             max_retries=int(os.getenv("MAX_RETRIES", "2")),
             max_schema_repairs=int(os.getenv("MAX_SCHEMA_REPAIRS", "1")),
-            per_run_cap_usd=Decimal(os.getenv("PER_RUN_CAP_USD", "2.00")),
-            weekly_cap_usd=Decimal(os.getenv("WEEKLY_CAP_USD", "25.00")),
         )
 
