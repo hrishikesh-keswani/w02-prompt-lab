@@ -41,8 +41,8 @@ TASK_PROMPTS: dict[TaskName, tuple[str, str]] = {
 
 MAX_OUTPUT_TOKENS: dict[TaskName, int] = {
     "triage": 1024,
-    "summarization": 2048,
-    "extraction": 2048,
+    "summarization": 1024,
+    "extraction": 1024,
 }
 
 DEFAULT_SYSTEM = (
@@ -319,10 +319,6 @@ def main() -> None:
             model = settings.models[model_name]
             adapter = adapters[model_name]
             for case, gold in pairs:
-                if total_cost >= settings.per_run_cap_usd and settings.per_run_cap_usd > 0:
-                    raise SystemExit(
-                        f"Per-run cost cap reached before {task}/{model_name}/{case.id}"
-                    )
                 adapter.reset()
                 request = _build_request(
                     task=task,

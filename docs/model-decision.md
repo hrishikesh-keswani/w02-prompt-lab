@@ -1,10 +1,12 @@
 # Model Decision Record
 
-Run ID: `day5-local-comparison-01`
+Run ID: `day5-local-comparison-02`
 
 Both evaluated models used `provider = "ollama"` and `cost_usd = 0.0`. Model identity comes from configuration (`MODEL_A` / `MODEL_B`) through `model_id`. This record does not invent cloud token prices.
 
 Day 4 constraint preserved: `triage.v1` remains the triage prompt family. `triage.v2` was not selected then (queue 9/12 vs 10/12, extra output tokens and latency) and was not re-run here.
+
+This measurement used `max_output_tokens=1024` on all three tasks. No call truncated (`stop_reason=length`). Quality counts matched the prior Day 5 run; latency shifted slightly with hardware.
 
 ## Evaluated models
 
@@ -26,12 +28,12 @@ Join key for every score row: `run_id`, `case_id`, `task`, `model_id`, `prompt_i
 
 | Task | Model | Prompt version | Valid | Quality (selected) | Input tok/case | Output tok/case | Median latency | Max latency | n | Repairs | Failures |
 | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |
-| extraction | mistral | extract.v2 | 12/12 | recall 71/72; citations 74/74; unsupported avoided 9/12; status 9/12 | 2071.9 | 356.7 | 19394.5 ms | 21257 ms | 12 | 0/12 | 0 |
-| extraction | qwen | extract.v2 transfer | 12/12 | recall 71/72; citations 73/73; unsupported avoided 10/12; status 9/12 | 1711.9 | 286.5 | 16267 ms | 19909 ms | 12 | 0/12 | 0 |
-| summarization | mistral | summarize.v1 | 9/12 | recall 52/60; citations 0/53; status 8/12 | 1131 | 323.7 | 12750 ms | 15882 ms | 15 | 3/12 | 3 |
-| summarization | qwen | summarize.v1 transfer | 12/12 | recall 60/60; citations 63/63; status 10/12 | 699.2 | 244.8 | 12981.5 ms | 16373 ms | 12 | 0/12 | 0 |
-| triage | mistral | triage.v1 | 12/12 | queue 10/12; escalation 9/12; missed esc. 2/12; unnecessary esc. 1/12; human boundary 12/12; PII 0/12 | 809.8 | 129.8 | 5853 ms | 8023 ms | 12 | 0/12 | 0 |
-| triage | qwen | triage.v1 transfer | 12/12 | queue 11/12; escalation 11/12; missed esc. 1/12; unnecessary esc. 0/12; human boundary 12/12; PII 0/12 | 677.6 | 110.1 | 5606 ms | 8930 ms | 12 | 0/12 | 0 |
+| extraction | mistral | extract.v2 | 12/12 | recall 71/72; citations 74/74; unsupported avoided 9/12; status 9/12 | 2071.9 | 356.7 | 18843 ms | 20499 ms | 12 | 0/12 | 0 |
+| extraction | qwen | extract.v2 transfer | 12/12 | recall 71/72; citations 73/73; unsupported avoided 10/12; status 9/12 | 1711.9 | 286.5 | 16408 ms | 19468 ms | 12 | 0/12 | 0 |
+| summarization | mistral | summarize.v1 | 9/12 | recall 52/60; citations 0/53; status 8/12 | 1131 | 323.7 | 12192 ms | 15368 ms | 15 | 3/12 | 3 |
+| summarization | qwen | summarize.v1 transfer | 12/12 | recall 60/60; citations 63/63; status 10/12 | 699.2 | 244.8 | 12444.5 ms | 15900 ms | 12 | 0/12 | 0 |
+| triage | mistral | triage.v1 | 12/12 | queue 10/12; escalation 9/12; missed esc. 2/12; unnecessary esc. 1/12; human boundary 12/12; PII 0/12 | 809.8 | 129.8 | 5618.5 ms | 7856 ms | 12 | 0/12 | 0 |
+| triage | qwen | triage.v1 transfer | 12/12 | queue 11/12; escalation 11/12; missed esc. 1/12; unnecessary esc. 0/12; human boundary 12/12; PII 0/12 | 677.6 | 110.1 | 5398.5 ms | 8477 ms | 12 | 0/12 | 0 |
 
 Human-boundary re-check: both `mistral:7b` and `qwen3:8b` with `triage.v1`. No committed `draft_reply` promised a refund, approved or denied a claim, stated the issue was resolved, or implied a final customer outcome.
 
@@ -61,3 +63,4 @@ Do not read this as “Qwen is the better model.” Each row is that model runni
 - Schema-repair policy or `think=False` changes.
 - Human-boundary or PII leakage is no longer 12/12 / 0/12 on either model.
 - Version-selection groups stop agreeing with gold after extraction quality changes.
+- A shared `max_output_tokens` cap starts producing `stop_reason=length` on either model.
